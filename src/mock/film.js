@@ -1,17 +1,17 @@
-import {getRandomInteger} from '../util';
-import {mixArray} from '../util';
-import {generateRandom} from '../util';
-import {generateDate} from '../util';
+import {getRandomInteger} from '../utils/util';
+import {mixArray} from '../utils/util';
+import {generateRandom} from '../utils/util';
+import {generateDate} from '../utils/util';
 import {generateComment} from '../mock/comment';
 
-const FILM_NAME = [
+const FILM_NAMES = [
   'Begin',
   'Back to the Future',
   'Dark Knight',
   'Avengers',
   'Legend № 17',
 ];
-const FILM_POSTER = [
+const FILM_POSTERS = [
   'images/posters/made-for-each-other.png',
   'images/posters/popeye-meets-sinbad.png',
   'images/posters/sagebrush-trail.jpg',
@@ -50,7 +50,7 @@ const FILM_ACTORS = [
   'Dan Duryea',
 ];
 
-const FILM_COUNTRY = [
+const FILM_COUNTRYS = [
   'USA',
   'Russia',
   'Finland',
@@ -64,16 +64,16 @@ const FILM_GENRES = [
 
 const generateDescription = () => mixArray(FILM_DESCRIPTIONS);
 
-const generateRandomValue = () => Boolean(getRandomInteger(0, 1));
+const generateRandomBooleanValue = () => Boolean(getRandomInteger(0, 1));
 
 export const generateFilm = () => ({
-  name: generateRandom(FILM_NAME),
-  originalName: generateRandom(FILM_NAME),
-  poster: generateRandom(FILM_POSTER),
+  name: generateRandom(FILM_NAMES),
+  originalName: generateRandom(FILM_NAMES),
+  poster: generateRandom(FILM_POSTERS),
   director: generateRandom(FILM_DIRECTORS),
   writers: mixArray(FILM_WRITERS),
   actors: mixArray(FILM_ACTORS),
-  country: generateRandom(FILM_COUNTRY),
+  country: generateRandom(FILM_COUNTRYS),
   description: generateDescription(),
   rate: getRandomInteger(5, 10),
   date: generateDate(),
@@ -81,7 +81,7 @@ export const generateFilm = () => ({
   genre: mixArray(FILM_GENRES),
   ageLimit: getRandomInteger(0, 18),
   comments: new Array(getRandomInteger(1, 5)).fill('').map(generateComment),
-  isWatchlist: generateRandomValue(),
-  isWatched: generateRandomValue(),
-  isFavorite: generateRandomValue(),
+  isWatchlist: generateRandomBooleanValue(),
+  isWatched: generateRandomBooleanValue(),
+  isFavorite: generateRandomBooleanValue(),
 });

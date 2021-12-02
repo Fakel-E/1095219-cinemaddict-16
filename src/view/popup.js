@@ -1,5 +1,5 @@
-import {humanizeDate} from '../util';
-import {humanizeDateComment} from '../util';
+import {humanizeDate} from '../utils/util';
+import {humanizeDateComment} from '../utils/util';
 
 
 const renderComment = ({emoji, text, author, date}) => (

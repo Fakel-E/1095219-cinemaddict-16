@@ -1,5 +1,5 @@
-import {generateRandom} from '../util';
-import {generateDate} from '../util';
+import {generateRandom} from '../utils/util';
+import {generateDate} from '../utils/util';
 
 const EMOJIS = [
   'images/emoji/smile.png',

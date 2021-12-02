@@ -10,7 +10,7 @@ import {createStatisticTemplate} from './view/statistic';
 import {createPopupTemplate} from './view/popup';
 import {generateFilm} from './mock/film.js';
 // import {generateComment} from './mock/comment.js';
-import {generateFilter} from './mock/filter.js';
+import {generateFilter} from './utils/filter.js';
 
 const FILM_COUNT = 20;
 const FILM_TOP = 2;
