@@ -1,5 +1,6 @@
 import {humanizeDate} from '../utils/util';
 import {humanizeDateComment} from '../utils/util';
+import {createElement} from '../utils/util';
 
 
 const renderComment = ({emoji, text, author, date}) => (
@@ -24,7 +25,7 @@ const renderFilmControlsTeamplate = () => (
     <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>`
 );
 
-export const createPopupTemplate = (film) => {
+const createPopupTemplate = (film) => {
   const {
     name,
     poster,
@@ -147,3 +148,28 @@ export const createPopupTemplate = (film) => {
   </section>`
   );
 };
+
+export default class Popup {
+  #film = null;
+  #element = null;
+
+  constructor(film) {
+    this.#film = film;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createPopupTemplate(this.#film);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
