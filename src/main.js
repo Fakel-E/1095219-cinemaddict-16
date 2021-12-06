@@ -9,9 +9,8 @@ import TopCommentView from './view/top-comment.js';
 import StatisticView from './view/statistic.js';
 import PopupView from './view/popup.js';
 import {generateFilm} from './mock/film.js';
-// import {generateComment} from './mock/comment.js';
 import {generateFilter} from './utils/filter.js';
-import {render, /*RenderPosition*/} from './utils/util.js';
+import {render} from './utils/util.js';
 
 const FILM_COUNT = 20;
 const FILM_TOP = 2;
@@ -22,7 +21,6 @@ const filters = generateFilter(films);
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
-//const siteFooterElement = document.querySelector('.footer');
 
 const siteStatisticElement = document.querySelector('.footer__statistics');
 
@@ -45,12 +43,15 @@ const renderFilmCard = (container, filmElements) => {
 
     const buttonClose = document.querySelector('.film-details__close-btn');
 
-    buttonClose.addEventListener('click', () => {
-      document.body.removeChild(popupView.element);
-      popupView.removeElement();
-      document.body.classList.remove('hide-overflow');
-      buttonClose.removeEventListener('click', filmCardClickHandler);
-    });
+    const btnCloseClickHandler = () => {
+      buttonClose.addEventListener('click', () => {
+        document.body.removeChild(popupView.element);
+        popupView.removeElement();
+        document.body.classList.remove('hide-overflow');
+        buttonClose.removeEventListener('click', btnCloseClickHandler);
+      });
+    };
+    btnCloseClickHandler();
   };
 
   filmCardComponent.querySelector('.film-card__poster').addEventListener('click', filmCardClickHandler);
@@ -62,23 +63,26 @@ const renderFilmCard = (container, filmElements) => {
 
 films.slice(0, FILM_PER_STEP).forEach((film) => renderFilmCard(filmCardContainer, film));
 
-const moreBtnListner = (component) => {
+const moreBtnListener = (component) => {
   let renderedTaskCount = FILM_PER_STEP;
 
-  component.element.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    films
-      .slice(renderedTaskCount, renderedTaskCount + FILM_PER_STEP)
-      .forEach((film) => renderFilmCard(filmCardContainer, film));
+  const moreBtnClickHandler = () => {
+    component.element.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      films
+        .slice(renderedTaskCount, renderedTaskCount + FILM_PER_STEP)
+        .forEach((film) => renderFilmCard(filmCardContainer, film));
 
-    renderedTaskCount += FILM_PER_STEP;
+      renderedTaskCount += FILM_PER_STEP;
 
-    if (renderedTaskCount >= films.length) {
-      component.element().remove();
-      component.removeElement();
-    }
-    component.getElement().removeEventListener('click', moreBtnListner);
-  });
+      if (renderedTaskCount >= films.length) {
+        component.element.remove();
+        component.removeElement();
+      }
+      component.element.removeEventListener('click', moreBtnClickHandler);
+    });
+  };
+  moreBtnClickHandler();
 };
 
 if (films.length > FILM_PER_STEP) {
@@ -86,7 +90,7 @@ if (films.length > FILM_PER_STEP) {
   const loadMoreButtonComponent = new ButtonMoreView();
   render(siteFilmContainer, loadMoreButtonComponent.element);
 
-  moreBtnListner(loadMoreButtonComponent);
+  moreBtnListener(loadMoreButtonComponent);
 }
 
 render(filmTemplate, new TopRatedView().element);
@@ -101,4 +105,4 @@ bestFilms.forEach((topElementsContainer) => {
 });
 
 render(siteStatisticElement, new StatisticView().element);
-//render(siteFooterElement, createPopupTemplate(films[0]), RenderPosition.AFTERBEGIN);
+
