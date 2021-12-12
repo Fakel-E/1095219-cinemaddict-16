@@ -43,15 +43,14 @@ const renderFilmCard = (container, filmElements) => {
 
     const buttonClose = document.querySelector('.film-details__close-btn');
 
-    const btnCloseClickHandler = () => {
-      buttonClose.addEventListener('click', () => {
-        document.body.removeChild(popupView.element);
-        popupView.removeElement();
-        document.body.classList.remove('hide-overflow');
-        buttonClose.removeEventListener('click', btnCloseClickHandler);
-      });
+    const removePopup = () => {
+      document.body.removeChild(popupView.element);
+      popupView.removeElement();
+      document.body.classList.remove('hide-overflow');
+      buttonClose.removeEventListener('click', removePopup);
     };
-    btnCloseClickHandler();
+
+    buttonClose.addEventListener('click', removePopup);
   };
 
   filmCardComponent.querySelector('.film-card__poster').addEventListener('click', filmCardClickHandler);
@@ -66,23 +65,23 @@ films.slice(0, FILM_PER_STEP).forEach((film) => renderFilmCard(filmCardContainer
 const moreBtnListener = (component) => {
   let renderedTaskCount = FILM_PER_STEP;
 
-  const moreBtnClickHandler = () => {
-    component.element.addEventListener('click', (evt) => {
-      evt.preventDefault();
-      films
-        .slice(renderedTaskCount, renderedTaskCount + FILM_PER_STEP)
-        .forEach((film) => renderFilmCard(filmCardContainer, film));
+  const renderMoreFilm = () => {
+    films
+      .slice(renderedTaskCount, renderedTaskCount + FILM_PER_STEP)
+      .forEach((film) => renderFilmCard(filmCardContainer, film));
 
-      renderedTaskCount += FILM_PER_STEP;
+    renderedTaskCount += FILM_PER_STEP;
 
-      if (renderedTaskCount >= films.length) {
-        component.element.remove();
-        component.removeElement();
-      }
-      component.element.removeEventListener('click', moreBtnClickHandler);
-    });
+    if (renderedTaskCount >= films.length) {
+      component.element.remove();
+      component.removeElement();
+    }
+
+    component.element.removeEventListener('click', renderMoreFilm);
+    component.element.addEventListener('click', renderMoreFilm);
   };
-  moreBtnClickHandler();
+
+  component.element.addEventListener('click', renderMoreFilm);
 };
 
 if (films.length > FILM_PER_STEP) {
