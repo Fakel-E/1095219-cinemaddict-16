@@ -73,12 +73,10 @@ const moreBtnListener = (component) => {
     renderedTaskCount += FILM_PER_STEP;
 
     if (renderedTaskCount >= films.length) {
+      component.element.removeEventListener('click', renderMoreFilm);
       component.element.remove();
       component.removeElement();
     }
-
-    component.element.removeEventListener('click', renderMoreFilm);
-    component.element.addEventListener('click', renderMoreFilm);
   };
 
   component.element.addEventListener('click', renderMoreFilm);
