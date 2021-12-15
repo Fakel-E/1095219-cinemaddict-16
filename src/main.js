@@ -3,6 +3,7 @@ import SiteMenuView from './view/site-menu';
 import SortMenuView from './view/sort-menu.js';
 import FilmTemplateView from './view/film-container.js';
 import FilmCardView  from './view/film-card.js';
+import FilmEmptyView  from './view/films-empty.js';
 import ButtonMoreView from './view/button-more.js';
 import TopRatedView from './view/top-rate.js';
 import TopCommentView from './view/top-comment.js';
@@ -41,6 +42,16 @@ const renderFilmCard = (container, filmElements) => {
     document.body.classList.add('hide-overflow');
     document.body.appendChild(popupView.element);
 
+    const buttonEscKeydownHandler = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        document.body.removeChild(popupView.element);
+        popupView.removeElement();
+        document.body.classList.remove('hide-overflow');
+        document.removeEventListener('keydown', buttonEscKeydownHandler);
+      }
+    };
+
     const buttonClose = document.querySelector('.film-details__close-btn');
 
     const removePopup = () => {
@@ -51,6 +62,7 @@ const renderFilmCard = (container, filmElements) => {
     };
 
     buttonClose.addEventListener('click', removePopup);
+    document.addEventListener('keydown', buttonEscKeydownHandler);
   };
 
   filmCardComponent.querySelector('.film-card__poster').addEventListener('click', filmCardClickHandler);
@@ -59,8 +71,6 @@ const renderFilmCard = (container, filmElements) => {
 
   render(container, filmCardComponent);
 };
-
-films.slice(0, FILM_PER_STEP).forEach((film) => renderFilmCard(filmCardContainer, film));
 
 const moreBtnListener = (component) => {
   let renderedTaskCount = FILM_PER_STEP;
@@ -82,6 +92,14 @@ const moreBtnListener = (component) => {
   component.element.addEventListener('click', renderMoreFilm);
 };
 
+if (films.length === 0) {
+  render(siteMainElement, new FilmEmptyView().element);
+} else {
+  films.slice(0, FILM_PER_STEP).forEach((film) => renderFilmCard(filmCardContainer, film));
+  render(filmTemplate, new TopRatedView().element);
+  render(filmTemplate, new TopCommentView().element);
+}
+
 if (films.length > FILM_PER_STEP) {
 
   const loadMoreButtonComponent = new ButtonMoreView();
@@ -90,8 +108,6 @@ if (films.length > FILM_PER_STEP) {
   moreBtnListener(loadMoreButtonComponent);
 }
 
-render(filmTemplate, new TopRatedView().element);
-render(filmTemplate, new TopCommentView().element);
 const bestFilms = document.querySelectorAll('.films-list--extra');
 
 bestFilms.forEach((topElementsContainer) => {
