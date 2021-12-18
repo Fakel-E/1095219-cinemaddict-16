@@ -1,5 +1,5 @@
-import {humanizeDate} from '../utils/util';
-import {createElement} from '../utils/util';
+import {humanizeDate} from '../utils/date';
+import AbstractView from './abstract.js';
 
 const createFilmCardTemplate = (film) => {
   const {
@@ -39,28 +39,16 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   #film = null;
-  #element = null;
 
   constructor(film) {
+    super();
     this.#film = film;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createFilmCardTemplate(this.#film);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
 
