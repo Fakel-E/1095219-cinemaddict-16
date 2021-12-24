@@ -38,7 +38,7 @@ const renderFilmCard = (container, filmElements) => {
   const filmCardComponent = new FilmCardView(filmElements).element;
   const popupView = new PopupView(filmElements);
 
-  const filmCardClickHandler = () => {
+  filmCardComponent.addClickHandler(() => {
     document.body.classList.add('hide-overflow');
     document.body.appendChild(popupView.element);
 
@@ -61,16 +61,7 @@ const renderFilmCard = (container, filmElements) => {
 
     buttonClose.addEventListener('click', removePopup);
     document.addEventListener('keydown', buttonEscKeydownHandler);
-  };
-
-  const addClickHandler = (element) => {
-    element.querySelectorAll('.film-card__poster, .film-card__title, .film-card__comments')
-      .forEach((item) => {
-        item.addEventListener('click', filmCardClickHandler);
-      });
-  };
-
-  addClickHandler(filmCardComponent);
+  });
 
   render(container, filmCardComponent);
 };
