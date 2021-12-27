@@ -35,7 +35,7 @@ const siteFilmContainer = filmTemplate.querySelector('.films-list');
 const filmCardContainer = siteFilmContainer.querySelector('.films-list__container');
 
 const renderFilmCard = (container, filmElements) => {
-  const filmCardComponent = new FilmCardView(filmElements).element;
+  const filmCardComponent = new FilmCardView(filmElements);
   const popupView = new PopupView(filmElements);
 
   filmCardComponent.addClickHandler(() => {
@@ -63,7 +63,7 @@ const renderFilmCard = (container, filmElements) => {
     document.addEventListener('keydown', buttonEscKeydownHandler);
   });
 
-  render(container, filmCardComponent);
+  render(container, filmCardComponent.element);
 };
 
 const showMoreFilms = (component) => {
