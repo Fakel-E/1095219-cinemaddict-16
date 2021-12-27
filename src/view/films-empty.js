@@ -1,21 +1,7 @@
-import {createElement} from '../utils/util';
+import AbstractView from './abstract.js';
 
-export default class FilmsEmpty {
-  #element = null;
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
+export default class FilmsEmpty extends AbstractView {
   get template() {
     return '<section class="films-list"> <h2 class="films-list__title">There are no movies in our database</h2> </section>';
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
