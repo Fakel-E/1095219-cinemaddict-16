@@ -12,4 +12,8 @@ export default class TopComment extends AbstractView {
   get template() {
     return createTopCommentTemplate();
   }
+
+  get container() {
+    return this.element.querySelector('.films-list__container');
+  }
 }

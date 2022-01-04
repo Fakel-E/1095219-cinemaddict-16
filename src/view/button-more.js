@@ -7,19 +7,18 @@ const createButtonShowTemplate = () => (
 export default class ButtonMore extends AbstractView {
   constructor() {
     super();
-    this._clickHandler = this._clickHandler.bind(this);
   }
 
   get template() {
     return createButtonShowTemplate();
   }
 
-  setClickHandler(callback) {
+  setClickHandler = (callback) => {
     this._callback.click = callback;
-    this.element.addEventListener('click', this._clickHandler);
+    this.element.addEventListener('click', this.#clickHandler);
   }
 
-  _clickHandler(evt) {
+  #clickHandler = (evt) => {
     evt.preventDefault();
     this._callback.click();
   }

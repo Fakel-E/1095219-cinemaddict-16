@@ -1,26 +1,34 @@
 import ProfileView from './view/profile';
 import SiteMenuView from './view/site-menu';
 import SortMenuView from './view/sort-menu.js';
-import FilmTemplateView from './view/film-container.js';
-import FilmCardView  from './view/film-card.js';
-import FilmEmptyView  from './view/films-empty.js';
-import ButtonMoreView from './view/button-more.js';
-import TopRatedView from './view/top-rate.js';
-import TopCommentView from './view/top-comment.js';
+import FilmListPresenter from './presenter/film-list.js';
 import StatisticView from './view/statistic.js';
-import PopupView from './view/popup.js';
 import {generateFilm} from './mock/film.js';
 import {generateFilter} from './utils/filter.js';
-import {render, remove} from './utils/render.js';
+import {render} from './utils/render.js';
 
 const FILM_COUNT = 20;
-const FILM_TOP = 2;
-const FILM_PER_STEP = 5;
+/*const FILM_TOP = 2;
+const FILM_PER_STEP = 5;*/
 
 const films = new Array(FILM_COUNT).fill('').map(generateFilm);
 const filters = generateFilter(films);
 
+
 const siteHeaderElement = document.querySelector('.header');
+const siteMainElement = document.querySelector('.main');
+const siteStatisticElement = document.querySelector('.footer__statistics');
+
+render(siteHeaderElement, new ProfileView());
+render(siteMainElement, new SiteMenuView(filters));
+render(siteMainElement, new SortMenuView());
+const filmPresenter = new FilmListPresenter(siteMainElement);
+filmPresenter.init(films);
+
+render(siteStatisticElement, new StatisticView(FILM_COUNT));
+
+
+/*const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 
 const siteStatisticElement = document.querySelector('.footer__statistics');
@@ -108,5 +116,5 @@ bestFilms.forEach((topElementsContainer) => {
   }
 });
 
-render(siteStatisticElement, new StatisticView());
+render(siteStatisticElement, new StatisticView());*/
 
