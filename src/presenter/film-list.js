@@ -37,11 +37,7 @@ export default class FilmList {
   init(films) {
     this.#films = films.slice();
 
-    this.#renderAllFilms();
-    render(this.#container, this.#mainContentView);
-    render(this.#mainContentView, this.#allFilmsView);
-    render(this.#mainContentView, this.#topRatedView);
-    render(this.#mainContentView, this.#topCommentView);
+    this.#renderFilmsBoard();
   }
 
   #handleModeChange = () => {
@@ -111,13 +107,17 @@ export default class FilmList {
     this.#renderCommentFilms(0, FILM_TOP);
   }
 
-  #render = () => {
+  #renderFilmsBoard = () => {
     if (this.#films.length === 0) {
       this.#renderNoFilms();
       return;
     }
 
     this.#renderAllFilms();
+    render(this.#container, this.#mainContentView);
+    render(this.#mainContentView, this.#allFilmsView);
+    render(this.#mainContentView, this.#topRatedView);
+    render(this.#mainContentView, this.#topCommentView);
   }
 
   #clear = () => {
@@ -131,6 +131,6 @@ export default class FilmList {
 
   #handleFilmChange = (updatedFilm) => {
     this.#films = updateItemById(this.#films, updatedFilm);
-    this.#filmCardPresenter[updatedFilm.id].init(updatedFilm);
+    this.#filmCardPresenterStorage[updatedFilm.id].init(updatedFilm);
   }
 }
