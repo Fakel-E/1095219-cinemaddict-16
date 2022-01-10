@@ -31,6 +31,24 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
+export const replace = (newChild, oldChild) => {
+  if (oldChild instanceof Abstract) {
+    oldChild = oldChild.element;
+  }
+
+  if (newChild instanceof Abstract) {
+    newChild = newChild.element;
+  }
+
+  const parent = oldChild.parentElement;
+
+  if (parent === null || oldChild === null || newChild === null) {
+    throw new Error('Can\'t replace unexisting elements');
+  }
+
+  parent.replaceChild(newChild, oldChild);
+};
+
 export const remove = (component) => {
   if (!(component instanceof Abstract)) {
     throw new Error('Can remove only components');
@@ -39,3 +57,11 @@ export const remove = (component) => {
   component.element.remove();
   component.removeElement();
 };
+
+const sortByRating = (prev, next) => next.rate - prev.rate;
+
+const sortByNumberComment = (prev, next) => next.comments.length - prev.comments.length;
+
+export const selectRatedFilms = (items) => items.slice().sort(sortByRating);
+
+export const selectCommentFilm = (items) => items.slice().sort(sortByNumberComment);
