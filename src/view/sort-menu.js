@@ -31,10 +31,9 @@ export default class SortMenu extends AbstractView {
   }
 
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'a') {
+    if (evt.target.tagName !== 'A') {
       return;
     }
-
     evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   }

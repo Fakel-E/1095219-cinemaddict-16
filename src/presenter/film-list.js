@@ -14,8 +14,7 @@ import {
   selectRatedFilms,
   selectCommentFilm,
   sortByDate,
-  sortByRating,
-  /*RenderPosition*/ } from '../utils/render.js';
+  sortByRating } from '../utils/render.js';
 import { updateItemById, SortType } from '../utils/common.js';
 
 const FILM_PER_STEP = 5;
@@ -29,7 +28,7 @@ export default class FilmList {
   #currentSortType = SortType.DEFAULT;
   #renderedFilmCount = FILM_PER_STEP;
   #allFilmsView = new FilmTemplateView();
-  #sortMenuView = new SortMenuView();
+  #sortMenuView = new SortMenuView(SortType.DEFAULT);
   #allFilmsListView = new FilmListTemplateView();
   #mainContentView = new MainContentView();
   #FilmsEmptyView = new FilmEmptyView();
@@ -88,14 +87,12 @@ export default class FilmList {
   }
 
   #renderSort = () => {
-    render(this.#mainContentView, this.#sortMenuView);
-    this.#sortMenuView = new SortMenuView(this.#currentSortType);
     const defaultSortMenuView = this.#sortMenuView;
 
     if (defaultSortMenuView) {
-      replace(this.#sortMenuView, defaultSortMenuView);
-    } else {
       render(this.#mainContentView, this.#sortMenuView);
+    } else {
+      replace(this.#sortMenuView, defaultSortMenuView);
     }
 
     this.#sortMenuView.setSortTypeChangeHandler(this.#handleSortTypeChange);
@@ -179,7 +176,7 @@ export default class FilmList {
 
   #clear = () => {
     Object
-      .values(this.#filmCardPresenter)
+      .values(this.#filmCardPresenterStorage)
       .forEach((presenter) => presenter.destroy());
     this.#filmCardPresenter = {};
     this.#renderedFilmCount = FILM_PER_STEP;
