@@ -1,4 +1,5 @@
 import Abstract from '../view/abstract';
+import dayjs from 'dayjs';
 
 export const RenderPosition = {
   AFTERBEGIN: 'afterbegin',
@@ -58,10 +59,12 @@ export const remove = (component) => {
   component.removeElement();
 };
 
-const sortByRating = (prev, next) => next.rate - prev.rate;
+export const sortByRating = (prev, next) => next.rate - prev.rate;
 
 const sortByNumberComment = (prev, next) => next.comments.length - prev.comments.length;
 
 export const selectRatedFilms = (items) => items.slice().sort(sortByRating);
 
 export const selectCommentFilm = (items) => items.slice().sort(sortByNumberComment);
+
+export const sortByDate = (filmA, filmB) => dayjs(filmB.date).diff(dayjs(filmA.date));

@@ -1,13 +1,21 @@
 import MainContentView from '../view/main-content.js';
 import FilmTemplateView from '../view/film-container.js';
 import FilmListTemplateView from '../view/film-list.js';
+import SortMenuView from '../view/sort-menu.js';
 import FilmEmptyView  from '../view/films-empty.js';
 import ButtonMoreView from '../view/button-more.js';
 import FilmCardPresenter from '../presenter/film-card.js';
 import TopRatedView from '../view/top-rate.js';
 import TopCommentView from '../view/top-comment.js';
-import {render, remove, selectRatedFilms, selectCommentFilm} from '../utils/render.js';
-import { updateItemById } from '../utils/common.js';
+import {
+  render,
+  remove,
+  replace,
+  selectRatedFilms,
+  selectCommentFilm,
+  sortByDate,
+  sortByRating } from '../utils/render.js';
+import { updateItemById, SortType } from '../utils/common.js';
 
 const FILM_PER_STEP = 5;
 const FILM_TOP = 2;
@@ -15,9 +23,12 @@ const FILM_TOP = 2;
 export default class FilmList {
   #container = null;
   #films = [];
+  #sourcedFilms = [];
 
+  #currentSortType = SortType.DEFAULT;
   #renderedFilmCount = FILM_PER_STEP;
   #allFilmsView = new FilmTemplateView();
+  #sortMenuView = new SortMenuView(SortType.DEFAULT);
   #allFilmsListView = new FilmListTemplateView();
   #mainContentView = new MainContentView();
   #FilmsEmptyView = new FilmEmptyView();
@@ -36,6 +47,7 @@ export default class FilmList {
 
   init(films) {
     this.#films = films.slice();
+    this.#sourcedFilms = films.slice();
 
     this.#renderFilmsBoard();
   }
@@ -47,6 +59,43 @@ export default class FilmList {
       ...Object.values(this.#topCommentFilmPresenterStorage),
     ]
       .forEach((presenter) => presenter.resetView());
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortFilms(sortType);
+    this.#clear();
+    this.#renderFilmsBoard();
+  }
+
+  #sortFilms = (sortType) => {
+    switch (sortType) {
+      case SortType.DATE:
+        this.#films.sort(sortByDate);
+        break;
+      case SortType.RATE:
+        this.#films.sort(sortByRating);
+        break;
+      default:
+        this.#films = this.#sourcedFilms.slice();
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #renderSort = () => {
+    const defaultSortMenuView = this.#sortMenuView;
+
+    if (defaultSortMenuView) {
+      render(this.#mainContentView, this.#sortMenuView);
+    } else {
+      replace(this.#sortMenuView, defaultSortMenuView);
+    }
+
+    this.#sortMenuView.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
 
   #renderFilmCard = (film, templateElement, typePresenter) => {
@@ -64,16 +113,20 @@ export default class FilmList {
 
   #renderTopFilms = (from, to) => {
 
-    selectRatedFilms(this.#films)
-      .slice(from, to)
-      .forEach((film) => this.#renderFilmCard(film, this.#topRatedView.container, this.#topRateFilmPresenterStorage));
+    if (this.#topRatedView.isEmptyContainer()) {
+      selectRatedFilms(this.#films)
+        .slice(from, to)
+        .forEach((film) => this.#renderFilmCard(film, this.#topRatedView.container, this.#topRateFilmPresenterStorage));
+    }
   }
 
   #renderCommentFilms = (from, to) => {
 
-    selectCommentFilm(this.#films)
-      .slice(from, to)
-      .forEach((film) => this.#renderFilmCard(film, this.#topCommentView.container, this.#topCommentFilmPresenterStorage));
+    if (this.#topCommentView.isEmptyContainer()) {
+      selectCommentFilm(this.#films)
+        .slice(from, to)
+        .forEach((film) => this.#renderFilmCard(film, this.#topCommentView.container, this.#topCommentFilmPresenterStorage));
+    }
   }
 
   #renderNoFilms = () => {
@@ -96,6 +149,7 @@ export default class FilmList {
   }
 
   #renderAllFilms = () => {
+    this.#renderSort();
     this.#renderFilms(0, FILM_PER_STEP);
     render(this.#allFilmsView, this.#allFilmsListView);
 
@@ -122,7 +176,7 @@ export default class FilmList {
 
   #clear = () => {
     Object
-      .values(this.#filmCardPresenter)
+      .values(this.#filmCardPresenterStorage)
       .forEach((presenter) => presenter.destroy());
     this.#filmCardPresenter = {};
     this.#renderedFilmCount = FILM_PER_STEP;
@@ -131,6 +185,7 @@ export default class FilmList {
 
   #handleFilmChange = (updatedFilm) => {
     this.#films = updateItemById(this.#films, updatedFilm);
+    this.#sourcedFilms = updateItemById(this.#sourcedFilms, updatedFilm);
     this.#filmCardPresenterStorage[updatedFilm.id].init(updatedFilm);
   }
 }

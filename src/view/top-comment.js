@@ -16,4 +16,8 @@ export default class TopComment extends AbstractView {
   get container() {
     return this.element.querySelector('.films-list__container');
   }
+
+  isEmptyContainer() {
+    return this.element.querySelector('.films-list__container').childElementCount === 0;
+  }
 }
