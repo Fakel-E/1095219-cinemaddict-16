@@ -10,7 +10,6 @@ import TopCommentView from '../view/top-comment.js';
 import {
   render,
   remove,
-  replace,
   selectRatedFilms,
   selectCommentFilm,
   sortByDate,
@@ -28,7 +27,7 @@ export default class FilmList {
   #currentSortType = SortType.DEFAULT;
   #renderedFilmCount = FILM_PER_STEP;
   #allFilmsView = new FilmTemplateView();
-  #sortMenuView = new SortMenuView(SortType.DEFAULT);
+  #sortMenuView = new SortMenuView(/*SortType.DEFAULT*/);
   #allFilmsListView = new FilmListTemplateView();
   #mainContentView = new MainContentView();
   #FilmsEmptyView = new FilmEmptyView();
@@ -87,13 +86,8 @@ export default class FilmList {
   }
 
   #renderSort = () => {
-    const defaultSortMenuView = this.#sortMenuView;
-
-    if (defaultSortMenuView) {
-      render(this.#mainContentView, this.#sortMenuView);
-    } else {
-      replace(this.#sortMenuView, defaultSortMenuView);
-    }
+    this.#sortMenuView = new SortMenuView(this.#currentSortType);
+    render(this.#mainContentView, this.#sortMenuView);
 
     this.#sortMenuView.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
@@ -180,6 +174,7 @@ export default class FilmList {
       .forEach((presenter) => presenter.destroy());
     this.#filmCardPresenter = {};
     this.#renderedFilmCount = FILM_PER_STEP;
+    remove(this.#sortMenuView);
     remove(this.#showMoreButtonView);
   }
 
