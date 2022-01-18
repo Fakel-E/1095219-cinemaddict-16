@@ -1,4 +1,4 @@
-import {humanizeDate} from '../utils/date';
+import {humanizeDate, getFilmDuration} from '../utils/date';
 import AbstractView from './abstract.js';
 
 const createFilmCardTemplate = (film) => {
@@ -21,7 +21,7 @@ const createFilmCardTemplate = (film) => {
       <p class="film-card__rating">${rate}</p>
       <p class="film-card__info">
         <span class="film-card__year">${humanizeDate(date)}</span>
-        <span class="film-card__duration">${runtime}</span>
+        <span class="film-card__duration">${getFilmDuration(runtime)}</span>
         <span class="film-card__genre">${genre}</span>
       </p>
       <img src=${poster} alt="" class="film-card__poster">

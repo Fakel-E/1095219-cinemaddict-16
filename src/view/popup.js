@@ -1,5 +1,5 @@
-import {humanizeDate} from '../utils/date';
-import {humanizeDateComment} from '../utils/date';
+import {humanizeDate, humanizeDateComment, getFilmDuration} from '../utils/date';
+import {} from '../utils/date';
 import SmartView from './smart.js';
 
 const Emotion = {
@@ -104,7 +104,7 @@ const createPopupTemplate = (data) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${runtime}</td>
+                <td class="film-details__cell">${getFilmDuration(runtime)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
@@ -186,6 +186,9 @@ export default class PopupView extends SmartView {
   #setInnerHandlers = () => {
     this.element.querySelectorAll('.film-details__emoji-item').forEach((item) =>
       item.addEventListener('click', this.#emojiClickHandler));
+    this.element
+      .querySelector('.film-details__close-btn')
+      .addEventListener('click', this.#popupCloseButtonClickHandler);
   }
 
   setWatchlistClickHandler = (callback) => {
